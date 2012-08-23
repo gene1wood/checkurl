@@ -145,13 +145,13 @@ checks = rewrite_checks(
     { 'meth': 'GET', 'rc': 200, 'url': 'https://login.anosrep.org/about' },
 
     # POST to /verify over HTTP => 400 with 'Please use HTTPS rather than HTTP'.
-    { 'meth': 'POST', 'rc': 405, 'check': post_http, 'postargs': verify_args, 'url': 'http://diresworb.org/verify' },
-    { 'meth': 'POST', 'rc': 405, 'check': post_http, 'postargs': verify_args, 'url': 'http://www.diresworb.org/verify' },
-    { 'meth': 'POST', 'rc': 405, 'check': post_http, 'postargs': verify_args, 'url': 'http://anosrep.org/verify' },
-    { 'meth': 'POST', 'rc': 405, 'check': post_http, 'postargs': verify_args, 'url': 'http://www.anosrep.org/verify' },
-    { 'meth': 'POST', 'rc': 400, 'check': post_http, 'postargs': verify_args, 'url': 'http://verifier.login.anosrep.org/verify' },
-    { 'meth': 'POST', 'rc': 405, 'check': post_http, 'postargs': verify_args, 'url': 'http://static.login.anosrep.org/verify' },
-    { 'meth': 'POST', 'rc': 405, 'check': post_http, 'postargs': verify_args, 'url': 'http://login.anosrep.org/verify' },
+    { 'meth': 'POST', 'rc': 404, 'check': post_http, 'postargs': verify_args, 'url': 'http://diresworb.org/verify' },
+    { 'meth': 'POST', 'rc': 404, 'check': post_http, 'postargs': verify_args, 'url': 'http://www.diresworb.org/verify' },
+    { 'meth': 'POST', 'rc': 404, 'check': post_http, 'postargs': verify_args, 'url': 'http://anosrep.org/verify' },
+    { 'meth': 'POST', 'rc': 404, 'check': post_http, 'postargs': verify_args, 'url': 'http://www.anosrep.org/verify' },
+    { 'meth': 'POST', 'rc': 404, 'check': post_http, 'postargs': verify_args, 'url': 'http://verifier.login.anosrep.org/verify' },
+    { 'meth': 'POST', 'rc': 404, 'check': post_http, 'postargs': verify_args, 'url': 'http://static.login.anosrep.org/verify' },
+    { 'meth': 'POST', 'rc': 404, 'check': post_http, 'postargs': verify_args, 'url': 'http://login.anosrep.org/verify' },
 
     # POST to /verify over HTTPS. Odd test here in which I pass in arguments
     # that will return 200 with a specific message that tells me that I
