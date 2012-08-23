@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- Mode: python; indent-tabs-mode: nil; python-indent: 2 -*-
 import json
 import os
 import re
@@ -17,15 +18,15 @@ verify_args = { 'assertion': 'foo', 'audience': 'bar' }
 # URL like /v/b7cb529baa/production/communication_iframe.js change in each
 # train. Use this to figure out what it is currently known as.
 def get_static_js(personaorg='login.anosrep.org'):
-    res = requests.get('https://%s/communication_iframe' % personaorg)
-    if res.status_code != 200:
-        print '  ERROR: Failed to GET /communication_iframe'
-        return
-    match = re.search(r'script src=".*/(v/[^"]*)"', res.text)
-    if not match:
-        print '  ERROR: Could not find script src in /communication_iframe'
-        return
-    return match.group(1)
+  res = requests.get('https://%s/communication_iframe' % personaorg)
+  if res.status_code != 200:
+    print '  ERROR: Failed to GET /communication_iframe'
+    return
+  match = re.search(r'script src=".*/(v/[^"]*)"', res.text)
+  if not match:
+    print '  ERROR: Could not find script src in /communication_iframe'
+    return
+  return match.group(1)
 
 # checker functions
 def post_http(response):
@@ -44,7 +45,7 @@ def dummy_verify(response):
              (response.json['status'], 'no certificates provided'))
   except:
     print ("  ERROR: wrong response: got non conforming json response: %s" %
-             (response.text))
+           (response.text))
 
 def disallowed_verify(response):
   try:
@@ -53,7 +54,7 @@ def disallowed_verify(response):
              (response.json['status'], 'failure'))
   except:
     print ("  ERROR: wrong response: got non conforming json response: %s" %
-             (response.text))
+           (response.text))
 
 # s/anosrep.org/persona.org/; s/diresworb.org/browserid.org/,
 # and substitute in a path to static js resource in this train
