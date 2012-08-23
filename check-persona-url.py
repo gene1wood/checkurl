@@ -5,6 +5,9 @@ import os
 import re
 import requests
 
+# By default, this script will run against STAGE (*.anosrep.org).
+# To run against PROD (*.persona.org), `export CHECK_PERSONA_ORG=1`.
+
 # https://bugzilla.mozilla.org/show_bug.cgi?id=781838
 # - POSTs MUST never redirect
 # - POST over non-SSL MUST fail 400 Bad Non-SSL
@@ -17,8 +20,8 @@ verify_args = { 'assertion': 'foo', 'audience': 'bar' }
 
 # URL like /v/b7cb529baa/production/communication_iframe.js change in each
 # train. Use this to figure out what it is currently known as.
-def get_static_js(personaorg='login.anosrep.org'):
-  res = requests.get('https://%s/communication_iframe' % personaorg)
+def get_static_js(persona_org):
+  res = requests.get('https://%s/communication_iframe' % persona_org)
   if res.status_code != 200:
     print '  ERROR: Failed to GET /communication_iframe'
     return
@@ -26,7 +29,27 @@ def get_static_js(personaorg='login.anosrep.org'):
   if not match:
     print '  ERROR: Could not find script src in /communication_iframe'
     return
-  return match.group(1)
+  path = match.group(1)
+  if not path.endswith('communication_iframe.js'):
+    print '  ERROR: Found script src but it is the wrong one'
+    return
+  return path
+
+# CSS URL like /v/e45f9f9309/production/dialog.css
+def get_static_css(persona_org):
+  res = requests.get('https://%s/sign_in' % persona_org)
+  if res.status_code != 200:
+    print '  ERROR: Failed to GET /sign_in'
+    return
+  match = re.search(r'link href=".*/(v/[^"]*)"', res.text)
+  if not match:
+    print '  ERROR: Could not find link href in /sign_in'
+    return
+  path = match.group(1)
+  if not path.endswith('dialog.css'):
+    print '  ERROR: Found link href but it is the wrong one'
+    return
+  return path
 
 # checker functions
 def post_http(response):
@@ -56,20 +79,23 @@ def disallowed_verify(response):
     print ("  ERROR: wrong response: got non conforming json response: %s" %
            (response.text))
 
-# s/anosrep.org/persona.org/; s/diresworb.org/browserid.org/,
-# and substitute in a path to static js resource in this train
+# s/anosrep.org/persona.org/; s/diresworb.org/browserid.org/, and substitute
+# a path for static js and css resources in this train
 def rewrite_checks(checks):
   persona_org = 'login.anosrep.org'
   if os.environ.get('CHECK_PERSONA_ORG'):
     persona_org = 'login.persona.org'
-  static_js = get_static_js(persona_org)
 
+  substitutions = [('__STATIC_JS__', get_static_js(persona_org)),
+                   ('__STATIC_CSS__', get_static_css(persona_org))]
   rewrite_anosrep = os.environ.get('CHECK_PERSONA_ORG')
 
   for check in checks:
-    check['url'] = check['url'].replace('__STATIC_JS__', static_js)
-    if 'redir' in check:
-      check['redir'] = check['redir'].replace('__STATIC_JS__', static_js)
+    for subst in substitutions:
+      check['url'] = check['url'].replace(subst[0], subst[1])
+      if 'redir' in check:
+        check['redir'] = check['redir'].replace(subst[0], subst[1])
+
     if rewrite_anosrep:
       check['url'] = check['url']\
           .replace('anosrep.org', 'persona.org')\
@@ -95,6 +121,7 @@ checks = rewrite_checks(
     { 'meth': 'GET', 'rc': 301, 'url': 'http://verifier.login.anosrep.org/', 'redir': 'https://verifier.login.anosrep.org/' },
     { 'meth': 'GET', 'rc': 301, 'url': 'http://static.login.anosrep.org/',   'redir': 'https://login.anosrep.org/' },
     { 'meth': 'GET', 'rc': 200, 'url': 'http://static.login.anosrep.org/__STATIC_JS__' },
+    { 'meth': 'GET', 'rc': 200, 'url': 'http://static.login.anosrep.org/__STATIC_CSS__' },
     { 'meth': 'GET', 'rc': 301, 'url': 'http://login.anosrep.org/',          'redir': 'https://login.anosrep.org/' },
     { 'meth': 'GET', 'rc': 301, 'url': 'http://login.anosrep.org/about',     'redir': 'https://login.anosrep.org/about' },
 
@@ -113,6 +140,7 @@ checks = rewrite_checks(
     { 'meth': 'GET', 'rc': 404, 'url': 'https://login.anosrep.org/verify' },
     { 'meth': 'GET', 'rc': 301, 'url': 'https://static.login.anosrep.org/',  'redir': 'https://login.anosrep.org/' },
     { 'meth': 'GET', 'rc': 200, 'url': 'https://static.login.anosrep.org/__STATIC_JS__' },
+    { 'meth': 'GET', 'rc': 200, 'url': 'https://static.login.anosrep.org/__STATIC_CSS__' },
     { 'meth': 'GET', 'rc': 200, 'url': 'https://login.anosrep.org/' },
     { 'meth': 'GET', 'rc': 200, 'url': 'https://login.anosrep.org/about' },
 
