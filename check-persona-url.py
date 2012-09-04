@@ -159,7 +159,7 @@ checks = rewrite_checks(
     # successfully reached all the way in to the verify workers.  If I don't
     # get that message then network/routing is wrong.
     { 'meth': 'POST', 'rc': 200, 'check': dummy_verify, 'postargs': verify_args, 'url': 'https://diresworb.org/verify' },
-    { 'meth': 'POST', 'rc': 404, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://www.diresworb.org/verify' },
+    { 'meth': 'POST', 'rc': 200, 'check': dummy_verify, 'postargs': verify_args, 'url': 'https://www.diresworb.org/verify' },
     { 'meth': 'POST', 'rc': 404, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://anosrep.org/verify' },
     { 'meth': 'POST', 'rc': 404, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://www.anosrep.org/verify' },
     { 'meth': 'POST', 'rc': 200, 'check': dummy_verify, 'postargs': verify_args, 'url': 'https://verifier.login.anosrep.org/verify' },
