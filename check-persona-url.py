@@ -136,7 +136,7 @@ checks = rewrite_checks(
     { 'meth': 'GET', 'rc': 404, 'url': 'https://anosrep.org/about' },
     { 'meth': 'GET', 'rc': 301, 'url': 'https://www.anosrep.org/',           'redir': 'https://anosrep.org/' },
     { 'meth': 'GET', 'rc': 404, 'url': 'https://www.anosrep.org/about' },
-    { 'meth': 'GET', 'rc': 405, 'url': 'https://verifier.login.anosrep.org/' },
+    { 'meth': 'GET', 'rc': 404, 'url': 'https://verifier.login.anosrep.org/' },
     { 'meth': 'GET', 'rc': 404, 'url': 'https://login.anosrep.org/verify' },
     { 'meth': 'GET', 'rc': 301, 'url': 'https://static.login.anosrep.org/',  'redir': 'https://login.anosrep.org/' },
     { 'meth': 'GET', 'rc': 200, 'url': 'https://static.login.anosrep.org/__STATIC_JS__' },
@@ -158,13 +158,13 @@ checks = rewrite_checks(
     # successfully reached all the way in to the verify workers.  If I don't
     # get that message then network/routing is wrong.
     { 'meth': 'POST', 'rc': 200, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://diresworb.org/verify' },
-    { 'meth': 'POST', 'rc': 405, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://www.diresworb.org/verify' },
-    { 'meth': 'POST', 'rc': 405, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://anosrep.org/verify' },
-    { 'meth': 'POST', 'rc': 405, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://www.anosrep.org/verify' },
+    { 'meth': 'POST', 'rc': 404, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://www.diresworb.org/verify' },
+    { 'meth': 'POST', 'rc': 404, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://anosrep.org/verify' },
+    { 'meth': 'POST', 'rc': 404, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://www.anosrep.org/verify' },
     { 'meth': 'POST', 'rc': 200, 'check': dummy_verify, 'postargs': verify_args, 'url': 'https://verifier.login.anosrep.org/verify' },
     { 'meth': 'POST', 'rc': 404, 'check': dummy_verify, 'postargs': verify_args, 'url': 'https://verifier.login.anosrep.org/' },
-    { 'meth': 'POST', 'rc': 405, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://static.login.anosrep.org/verify' },
-    { 'meth': 'POST', 'rc': 405, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://login.anosrep.org/verify' },
+    { 'meth': 'POST', 'rc': 404, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://static.login.anosrep.org/verify' },
+    { 'meth': 'POST', 'rc': 404, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://login.anosrep.org/verify' },
 ])
 
 
