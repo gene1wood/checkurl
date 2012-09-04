@@ -153,6 +153,7 @@ checks = rewrite_checks(
     { 'meth': 'POST', 'rc': 404, 'check': post_http, 'postargs': verify_args, 'url': 'http://verifier.login.anosrep.org/verify' },
     { 'meth': 'POST', 'rc': 404, 'check': post_http, 'postargs': verify_args, 'url': 'http://static.login.anosrep.org/verify' },
     { 'meth': 'POST', 'rc': 404, 'check': post_http, 'postargs': verify_args, 'url': 'http://login.anosrep.org/verify' },
+    { 'meth': 'POST', 'rc': 405, 'url': 'http://login.anosrep.org/' },
 
     # POST to /verify over HTTPS. Odd test here in which I pass in arguments
     # that will return 200 with a specific message that tells me that I
@@ -166,6 +167,7 @@ checks = rewrite_checks(
     { 'meth': 'POST', 'rc': 404, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://verifier.login.anosrep.org/' },
     { 'meth': 'POST', 'rc': 404, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://static.login.anosrep.org/verify' },
     { 'meth': 'POST', 'rc': 404, 'check': disallowed_verify, 'postargs': verify_args, 'url': 'https://login.anosrep.org/verify' },
+    { 'meth': 'POST', 'rc': 405, 'url': 'https://login.anosrep.org/' },
 ])
 
 
