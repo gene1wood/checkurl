@@ -51,6 +51,23 @@ def get_static_css(persona_org):
     return
   return path
 
+# PNG URL like /v/9d9a8cdfd7/i/button-arrow.png
+def get_static_png(persona_org):
+  css_file = get_static_css(persona_org)
+  res = requests.get('https://%s/%s' % (persona_org, css_file))
+  if res.status_code != 200:
+    print '  ERROR: Failed to GET /%s' % css_file
+    return
+  match = re.search(r"background-image:url\('.*/(v/[^']*)'", res.text)
+  if not match:
+    print '  ERROR: Could not find background-image url in /%s' % css_file
+    return
+  path = match.group(1)
+  if not path.endswith('/common/i/grain.png'):
+    print '  ERROR: Found background-image url but it is the wrong one: %s' % path
+    return
+  return path
+
 # checker functions
 def post_http(response):
   if response.json.get('error') != 'Please use HTTPS rather than HTTP':
@@ -87,6 +104,7 @@ def rewrite_checks(checks):
     persona_org = 'login.persona.org'
 
   substitutions = [('__STATIC_JS__', get_static_js(persona_org)),
+                   ('__STATIC_PNG__', get_static_png(persona_org)),
                    ('__STATIC_CSS__', get_static_css(persona_org))]
   rewrite_anosrep = os.environ.get('CHECK_PERSONA_ORG')
 
@@ -122,6 +140,7 @@ checks = rewrite_checks(
     { 'meth': 'GET', 'rc': 301, 'url': 'http://static.login.anosrep.org/',   'redir': 'https://login.anosrep.org/' },
     { 'meth': 'GET', 'rc': 404, 'url': 'http://static.login.anosrep.org/__STATIC_JS__' },
     { 'meth': 'GET', 'rc': 404, 'url': 'http://static.login.anosrep.org/__STATIC_CSS__' },
+    { 'meth': 'GET', 'rc': 404, 'url': 'http://static.login.anosrep.org/__STATIC_PNG__' },
     { 'meth': 'GET', 'rc': 301, 'url': 'http://login.anosrep.org/',          'redir': 'https://login.anosrep.org/' },
     { 'meth': 'GET', 'rc': 301, 'url': 'http://login.anosrep.org/about',     'redir': 'https://login.anosrep.org/about' },
 
@@ -142,6 +161,7 @@ checks = rewrite_checks(
     { 'meth': 'GET', 'rc': 301, 'url': 'https://static.login.anosrep.org/',  'redir': 'https://login.anosrep.org/' },
     { 'meth': 'GET', 'rc': 200, 'url': 'https://static.login.anosrep.org/__STATIC_JS__' },
     { 'meth': 'GET', 'rc': 200, 'url': 'https://static.login.anosrep.org/__STATIC_CSS__' },
+    { 'meth': 'GET', 'rc': 200, 'url': 'https://static.login.anosrep.org/__STATIC_PNG__' },
     { 'meth': 'GET', 'rc': 200, 'url': 'https://login.anosrep.org/' },
     { 'meth': 'GET', 'rc': 200, 'url': 'https://login.anosrep.org/about' },
 
