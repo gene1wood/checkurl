@@ -143,6 +143,8 @@ checks = rewrite_checks(
     { 'meth': 'GET', 'rc': 404, 'url': 'http://static.login.anosrep.org/__STATIC_PNG__' },
     { 'meth': 'GET', 'rc': 301, 'url': 'http://login.anosrep.org/',          'redir': 'https://login.anosrep.org/' },
     { 'meth': 'GET', 'rc': 301, 'url': 'http://login.anosrep.org/about',     'redir': 'https://login.anosrep.org/about' },
+    { 'meth': 'GET', 'rc': 404, 'url': 'http://static.login.anosrep.org/include.js' },
+    { 'meth': 'GET', 'rc': 404, 'url': 'http://login.anosrep.org/include.js' },
 
     # GET main site over HTTPS by its various hostnames. XXX currently in stage
     # the first 4 return 302. Minor difference and we can change this check to
@@ -164,6 +166,9 @@ checks = rewrite_checks(
     { 'meth': 'GET', 'rc': 200, 'url': 'https://static.login.anosrep.org/__STATIC_PNG__' },
     { 'meth': 'GET', 'rc': 200, 'url': 'https://login.anosrep.org/' },
     { 'meth': 'GET', 'rc': 200, 'url': 'https://login.anosrep.org/about' },
+    { 'meth': 'GET', 'rc': 404, 'url': 'https://anosrep.org/include.js' },
+    { 'meth': 'GET', 'rc': 404, 'url': 'https://static.login.anosrep.org/include.js' },
+    { 'meth': 'GET', 'rc': 200, 'url': 'https://login.anosrep.org/include.js' },
 
     # POST to /verify over HTTP => 400 with 'Please use HTTPS rather than HTTP'.
     { 'meth': 'POST', 'rc': 404, 'check': post_http, 'postargs': verify_args, 'url': 'http://diresworb.org/verify' },
