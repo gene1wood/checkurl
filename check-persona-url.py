@@ -170,9 +170,11 @@ checks = rewrite_checks(
     { 'meth': 'GET', 'rc': 200, 'url': 'https://login.anosrep.org/about' },
     { 'meth': 'GET', 'rc': 404, 'url': 'https://anosrep.org/include.js' },
     { 'meth': 'GET', 'rc': 404, 'url': 'https://static.login.anosrep.org/include.js' },
+    { 'meth': 'GET', 'rc': 404, 'url': 'https://verifier.login.anosrep.org/include.js' },
     { 'meth': 'GET', 'rc': 200, 'url': 'https://login.anosrep.org/include.js' },
     { 'meth': 'GET', 'rc': 404, 'url': 'https://anosrep.org/include.orig.js' },
     { 'meth': 'GET', 'rc': 404, 'url': 'https://static.login.anosrep.org/include.orig.js' },
+    { 'meth': 'GET', 'rc': 404, 'url': 'https://verifier.login.anosrep.org/include.orig.js' },
     { 'meth': 'GET', 'rc': 200, 'url': 'https://login.anosrep.org/include.orig.js' },
 
     # POST to /verify over HTTP => 400 with 'Please use HTTPS rather than HTTP'.
