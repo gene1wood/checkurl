@@ -17,11 +17,12 @@ import requests
 # - requests to verifier - don't allow GET? Only allow POST /verify?
 
 verify_args = { 'assertion': 'foo', 'audience': 'bar' }
+bid_args = { 'foo': 'bar' }
 
 # URL like /v/b7cb529baa/production/communication_iframe.js change in each
 # train. Use this to figure out what it is currently known as.
 def get_static_js(persona_org):
-  res = requests.get('https://%s/communication_iframe' % persona_org)
+  res = requests.get('https://%s/communication_iframe' % persona_org, timeout=2)
   if res.status_code != 200:
     print '  ERROR: Failed to GET /communication_iframe'
     return
@@ -37,7 +38,7 @@ def get_static_js(persona_org):
 
 # CSS URL like /v/e45f9f9309/production/dialog.css
 def get_static_css(persona_org):
-  res = requests.get('https://%s/sign_in' % persona_org)
+  res = requests.get('https://%s/sign_in' % persona_org, timeout=2)
   if res.status_code != 200:
     print '  ERROR: Failed to GET /sign_in'
     return
@@ -54,7 +55,7 @@ def get_static_css(persona_org):
 # PNG URL like /v/9d9a8cdfd7/i/button-arrow.png
 def get_static_png(persona_org):
   css_file = get_static_css(persona_org)
-  res = requests.get('https://%s/%s' % (persona_org, css_file))
+  res = requests.get('https://%s/%s' % (persona_org, css_file), timeout=2)
   if res.status_code != 200:
     print '  ERROR: Failed to GET /%s' % css_file
     return
@@ -86,6 +87,11 @@ def dummy_verify(response):
   except:
     print ("  ERROR: wrong response: got non conforming json response: %s" %
            (response.text))
+
+def dummy_bid(response):
+  if response.text != 'Forbidden: no cookie':
+    print ("  ERROR: wrong response: got: %s, expected '%s'" % 
+      (response.text, 'Forbidden: no cookie'))
 
 def disallowed_verify(response):
   try:
@@ -230,6 +236,8 @@ checks = rewrite_checks(
     { 'meth': 'POST', 'rc': 200, 'check': dummy_verify, 'postargs': verify_args, 'url': 'https://static.login.anosrep.org/verify' },
     { 'meth': 'POST', 'rc': 200, 'check': dummy_verify, 'postargs': verify_args, 'url': 'https://login.anosrep.org/verify' },
     { 'meth': 'POST', 'rc': 405, 'url': 'https://login.anosrep.org/' },
+    { 'meth': 'POST', 'rc': 403, 'check': dummy_bid, 'postargs': bid_args, 'url': 'https://login.anosrep.org/wsapi/stage_user' },
+    { 'meth': 'POST', 'rc': 403, 'check': dummy_bid, 'postargs': bid_args, 'url': 'https://www.anosrep.org/wsapi/stage_user' },
 ])
 
 
